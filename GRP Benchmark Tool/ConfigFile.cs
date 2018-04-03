@@ -42,7 +42,7 @@ namespace GRP_Benchmark_Tool
             {
                 try
                 {
-                    string[] split = lines[i].Split('=');
+                    string[] split = lines[i].Split('|');
                     if (split.Length != 2)
                         continue;
 
@@ -63,7 +63,9 @@ namespace GRP_Benchmark_Tool
                         benchmarkOffsets.Add(new BenchmarkOffset(benchOffsetSplit[0], benchOffsetSplit[1], benchOffsetSplit[2]));
                     }
                     if (split[0] == "args")
+                    {
                         customArguments = split[1];
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -82,7 +84,8 @@ namespace GRP_Benchmark_Tool
             foreach (BenchmarkOffset benchOffset in benchmarkOffsets)
                 lines.Add(string.Format("benchmarkOffset={0}:{1}:{2}", benchOffset.Name, benchOffset.Offset, benchOffset.Key));
             lines.Add("args=" + customArguments);
-            lines.Add(string.Format("benchmarkOffset={0}:{1}:{2}", baseOffset.Name, baseOffset.Offset, baseOffset.Key));
+            lines.Add(string.Format("baseOffset={0}:{1}:{2}", baseOffset.Name, baseOffset.Offset, baseOffset.Key));
+            lines.Add("executable=" + executableName);
             string[] linesArray = lines.ToArray();
             FileInfo info = new FileInfo(FILE_NAME);
             File.WriteAllLines(info.FullName, linesArray);

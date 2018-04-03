@@ -30,6 +30,8 @@ namespace GRP_Benchmark_Tool
             DependencyProperty.Register("CurrentDirectory", typeof(string), typeof(MainWindow));
         static DependencyProperty isReadyProperty =
             DependencyProperty.Register("IsReady", typeof(bool), typeof(MainWindow));
+        static DependencyProperty doModifyProperty =
+            DependencyProperty.Register("DoModify", typeof(bool), typeof(MainWindow));
 
         public ConfigFile CurrConfigFile
         {
@@ -64,6 +66,12 @@ namespace GRP_Benchmark_Tool
         {
             get { return (bool)GetValue(isReadyProperty); }
             set { SetValue(isReadyProperty, value); }
+        }
+
+        public bool DoModify
+        {
+            get { return (bool)GetValue(doModifyProperty); }
+            set { SetValue(doModifyProperty, value); }
         }
 
         BackgroundWorker bgworker = new BackgroundWorker();
@@ -115,6 +123,8 @@ namespace GRP_Benchmark_Tool
         private void btnReloadConfig_Click(object sender, RoutedEventArgs e)
         {
             LoadConfig();
+
+            TriggerWorker();
         }
 
         private void btnResetBigfile_Click(object sender, RoutedEventArgs e)
@@ -124,13 +134,21 @@ namespace GRP_Benchmark_Tool
                 BigfileModifier.ReplaceBenchmark(CurrentPath, benchOffset, benchOffset);
             }
             BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BaseOffset, CurrConfigFile.BaseOffset);
+            TriggerWorker();
         }
 
         private void btnLaunch_Click(object sender, RoutedEventArgs e)
         {
-            BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BaseOffset, CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
-            Process.Start(CurrentPath + "\\" + CurrConfigFile.ExecutableName, CurrConfigFile.CustomArguments);
-            TriggerWorker();
+            bool didModify = true;
+            if (DoModify)
+            {
+                didModify = BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BaseOffset, CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
+            }
+            if (didModify)
+            {
+                Process.Start(CurrentPath + "\\" + CurrConfigFile.ExecutableName, CurrConfigFile.CustomArguments);
+                TriggerWorker();
+            }
         }
 
         private void btnAddPath_Click(object sender, RoutedEventArgs e)
@@ -150,11 +168,15 @@ namespace GRP_Benchmark_Tool
                 CurrConfigFile.GamePaths.Add(fileInfo.Directory.FullName);
                 SaveConfig();
             }
+
+            TriggerWorker();
         }
 
         private void btnTest_Click(object sender, RoutedEventArgs e)
         {
             SaveConfig();
+
+            TriggerWorker();
         }
     }
 }
