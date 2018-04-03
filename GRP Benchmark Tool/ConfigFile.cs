@@ -10,6 +10,8 @@ namespace GRP_Benchmark_Tool
     public class ConfigFile
     {
         const string FILE_NAME = "config.cfg";
+        const char SEPARATOR = '|';
+        const char OFFSET_SEPARATOR = ':';
 
         List<string> gamePaths = new List<string>();
         public List<string> GamePaths { get { return gamePaths; } }
@@ -44,13 +46,13 @@ namespace GRP_Benchmark_Tool
                 {
                     string[] split = lines[i].Split('|');
                     if (split.Length != 2)
-                        continue;
+                        Error.ErrorBox("Config file is corrupt!", true);
 
                     if (split[0] == "executable")
                         executableName = split[1];
                     if (split[0] == "baseOffset")
                     {
-                        string[] baseOffsetSplit = split[1].Split(':');
+                        string[] baseOffsetSplit = split[1].Split(OFFSET_SEPARATOR);
                         baseOffset = new BenchmarkOffset(baseOffsetSplit[0], baseOffsetSplit[1], baseOffsetSplit[2]);
                     }
                     if (split[0] == "gamePaths")
@@ -59,7 +61,7 @@ namespace GRP_Benchmark_Tool
                         customOffsets.Add(split[1]);
                     if (split[0] == "benchmarkOffset")
                     {
-                        string[] benchOffsetSplit = split[1].Split(':');
+                        string[] benchOffsetSplit = split[1].Split(OFFSET_SEPARATOR);
                         benchmarkOffsets.Add(new BenchmarkOffset(benchOffsetSplit[0], benchOffsetSplit[1], benchOffsetSplit[2]));
                     }
                     if (split[0] == "args")
@@ -76,19 +78,26 @@ namespace GRP_Benchmark_Tool
 
         public void SaveFile()
         {
-            List<string> lines = new List<string>();
-            foreach (string line in gamePaths)
-                lines.Add("gamePaths=" + line);
-            foreach (string line in customOffsets)
-                lines.Add("customOffsets=" + line);
-            foreach (BenchmarkOffset benchOffset in benchmarkOffsets)
-                lines.Add(string.Format("benchmarkOffset={0}:{1}:{2}", benchOffset.Name, benchOffset.Offset, benchOffset.Key));
-            lines.Add("args=" + customArguments);
-            lines.Add(string.Format("baseOffset={0}:{1}:{2}", baseOffset.Name, baseOffset.Offset, baseOffset.Key));
-            lines.Add("executable=" + executableName);
-            string[] linesArray = lines.ToArray();
-            FileInfo info = new FileInfo(FILE_NAME);
-            File.WriteAllLines(info.FullName, linesArray);
+            try
+            {
+                List<string> lines = new List<string>();
+                foreach (string line in gamePaths)
+                    lines.Add("gamePaths" + SEPARATOR + line);
+                foreach (string line in customOffsets)
+                    lines.Add("customOffsets" + SEPARATOR + line);
+                foreach (BenchmarkOffset benchOffset in benchmarkOffsets)
+                    lines.Add(string.Format("benchmarkOffset{4}{0}{3}{1}{3}{2}", benchOffset.Name, benchOffset.Offset, benchOffset.Key, OFFSET_SEPARATOR, SEPARATOR));
+                lines.Add("args" + SEPARATOR + customArguments);
+                lines.Add(string.Format("baseOffset{4}{0}{3}{1}{3}{2}", baseOffset.Name, baseOffset.Offset, baseOffset.Key, OFFSET_SEPARATOR, SEPARATOR));
+                lines.Add("executable" + SEPARATOR + executableName);
+                string[] linesArray = lines.ToArray();
+                FileInfo info = new FileInfo(FILE_NAME);
+                File.WriteAllLines(info.FullName, linesArray);
+            }
+            catch (Exception ex)
+            {
+                Error.ErrorBox(ex, "Error saving config file!", true);
+            }
         }
     }
 
