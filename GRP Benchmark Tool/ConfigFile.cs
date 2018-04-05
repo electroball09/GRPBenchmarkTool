@@ -19,8 +19,6 @@ namespace GRP_Benchmark_Tool
         public List<string> CustomOffsets { get { return customOffsets; } }
         List<BenchmarkOffset> benchmarkOffsets = new List<BenchmarkOffset>();
         public List<BenchmarkOffset> BenchmarkOffsets { get { return benchmarkOffsets; } }
-        BenchmarkOffset baseOffset;
-        public BenchmarkOffset BaseOffset { get { return baseOffset; } }
         string customArguments = "";
         public string CustomArguments { get { return customArguments; } }
         string executableName = "";
@@ -50,11 +48,6 @@ namespace GRP_Benchmark_Tool
 
                     if (split[0] == "executable")
                         executableName = split[1];
-                    if (split[0] == "baseOffset")
-                    {
-                        string[] baseOffsetSplit = split[1].Split(OFFSET_SEPARATOR);
-                        baseOffset = new BenchmarkOffset(baseOffsetSplit[0], baseOffsetSplit[1], baseOffsetSplit[2]);
-                    }
                     if (split[0] == "gamePaths")
                         gamePaths.Add(split[1]);
                     if (split[0] == "customOffsets")
@@ -88,7 +81,6 @@ namespace GRP_Benchmark_Tool
                 foreach (BenchmarkOffset benchOffset in benchmarkOffsets)
                     lines.Add(string.Format("benchmarkOffset{4}{0}{3}{1}{3}{2}", benchOffset.Name, benchOffset.Offset, benchOffset.Key, OFFSET_SEPARATOR, SEPARATOR));
                 lines.Add("args" + SEPARATOR + customArguments);
-                lines.Add(string.Format("baseOffset{4}{0}{3}{1}{3}{2}", baseOffset.Name, baseOffset.Offset, baseOffset.Key, OFFSET_SEPARATOR, SEPARATOR));
                 lines.Add("executable" + SEPARATOR + executableName);
                 string[] linesArray = lines.ToArray();
                 FileInfo info = new FileInfo(FILE_NAME);

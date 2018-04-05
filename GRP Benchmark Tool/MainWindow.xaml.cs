@@ -26,6 +26,8 @@ namespace GRP_Benchmark_Tool
             DependencyProperty.Register("SelectedPath", typeof(int), typeof(MainWindow));
         static DependencyProperty selectedBenchmarkProperty =
             DependencyProperty.Register("SelectedBenchmark", typeof(int), typeof(MainWindow));
+        static DependencyProperty targetBenchmarkProperty =
+            DependencyProperty.Register("TargetBenchmark", typeof(int), typeof(MainWindow));
         static DependencyProperty currentDirectoryProperty =
             DependencyProperty.Register("CurrentDirectory", typeof(string), typeof(MainWindow));
         static DependencyProperty isReadyProperty =
@@ -49,6 +51,12 @@ namespace GRP_Benchmark_Tool
         {
             get { return (int)GetValue(selectedBenchmarkProperty); }
             set { SetValue(selectedBenchmarkProperty, value); }
+        }
+
+        public int SelectedTargetBenchmarkIndex
+        {
+            get { return (int)GetValue(targetBenchmarkProperty); }
+            set { SetValue(targetBenchmarkProperty, value); }
         }
 
         public string CurrentPath
@@ -133,7 +141,6 @@ namespace GRP_Benchmark_Tool
             {
                 BigfileModifier.ReplaceBenchmark(CurrentPath, benchOffset, benchOffset);
             }
-            BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BaseOffset, CurrConfigFile.BaseOffset);
             TriggerWorker();
         }
 
@@ -142,7 +149,7 @@ namespace GRP_Benchmark_Tool
             bool didModify = true;
             if (DoModify)
             {
-                didModify = BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BaseOffset, CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
+                didModify = BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BenchmarkOffsets[SelectedTargetBenchmarkIndex], CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
             }
             if (didModify)
             {
