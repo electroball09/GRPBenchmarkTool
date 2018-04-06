@@ -149,7 +149,14 @@ namespace GRP_Benchmark_Tool
             bool didModify = true;
             if (DoModify)
             {
-                didModify = BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BenchmarkOffsets[SelectedTargetBenchmarkIndex], CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
+                if (CurrConfigFile.IsUnlocked)
+                {
+                    didModify = BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.BenchmarkOffsets[SelectedTargetBenchmarkIndex], CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
+                }
+                else
+                {
+                    didModify = BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.LockedTargetOffset, CurrConfigFile.BenchmarkOffsets[SelectedBenchmarkIndex]);
+                }
             }
             if (didModify)
             {

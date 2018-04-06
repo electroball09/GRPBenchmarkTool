@@ -10,19 +10,21 @@
     <Grid>
         <ComboBox x:Name="cmbGamePath" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="723.648"
                   ItemsSource="{Binding Path=ConfigFile.GamePaths}" SelectedIndex="{Binding Path=SelectedPathIndex, Mode=TwoWay}"/>
-        <GroupBox x:Name="grpBenchOffsets" Header="Source" HorizontalAlignment="Left" Margin="378.063,233.785,0,0" VerticalAlignment="Top" Height="169.525" Width="365.585" IsEnabled="{Binding Path=IsReady}">
+        <GroupBox x:Name="grpBenchOffsets" Header="Source" HorizontalAlignment="Left" Margin="307.601,70.277,0,0" VerticalAlignment="Top" Height="{Binding Path=ConfigFile.SourceBoxHeight}" Width="426.047" 
+                  IsEnabled="{Binding Path=IsReady}">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="25.788" VerticalAlignment="Top" Width="290.399" Margin="0,0,-2,0">
-                    <Label Content="NAME" Width="150" HorizontalAlignment="Left" Margin="0"/>
-                    <Label Content="OFFSET" Width="70" HorizontalAlignment="Left" Margin="0"/>
-                    <Label Content="KEY" Width="70" HorizontalAlignment="Left" Margin="0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="25.788" VerticalAlignment="Top" Margin="0,0,-2,0">
+                    <Label Content="NAME" Width="190" HorizontalAlignment="Left" Margin="0"/>
+                    <Label Content="OFFSET" Width="100" HorizontalAlignment="Left" Margin="0"/>
+                    <Label Content="KEY" Width="100" HorizontalAlignment="Left" Margin="0"/>
                 </StackPanel>
-                <ListBox x:Name="listBenchOffsets" Height="118.327" ItemsSource="{Binding Path=ConfigFile.BenchmarkOffsets}" SelectedIndex="{Binding Path=SelectedBenchmarkIndex, Mode=TwoWay}">
+                <ListBox x:Name="listBenchOffsets" Height="{Binding Path=ConfigFile.SourceListHeight}" ItemsSource="{Binding Path=ConfigFile.BenchmarkOffsets}" 
+                         SelectedIndex="{Binding Path=SelectedBenchmarkIndex, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                <Label Content="{Binding Path=Name}" Width="150" HorizontalAlignment="Left" Margin="0"/>
-                                <Label Content="{Binding Path=Offset}" Width="70" HorizontalAlignment="Left" Margin="0"/>
+                                <Label Content="{Binding Path=Name}" Width="190" HorizontalAlignment="Left" Margin="0"/>
+                                <Label Content="{Binding Path=Offset}" Width="100" HorizontalAlignment="Left" Margin="0"/>
                                 <Label Content="{Binding Path=Key}" Width="100" HorizontalAlignment="Left" Margin="0"/>
                             </StackPanel>
                         </DataTemplate>
@@ -30,19 +32,20 @@
                 </ListBox>
             </StackPanel>
         </GroupBox>
-        <GroupBox x:Name="grpBenchOffsetsTarget" Header="Target" HorizontalAlignment="Left" Margin="10,233.785,0,0" VerticalAlignment="Top" Height="169.525" Width="365.585" IsEnabled="{Binding Path=IsReady}">
+        <GroupBox x:Name="grpBenchOffsetsTarget" Header="Target" HorizontalAlignment="Left" Margin="307.601,244.802,0,0" VerticalAlignment="Top" Height="169.525" Width="426.047" 
+                  IsEnabled="{Binding Path=IsReady}" Visibility="{Binding Path=ConfigFile.TargetBoxVisibility}">
             <StackPanel>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="25.788" VerticalAlignment="Top" Width="290.399" Margin="0,0,-2,0">
-                    <Label Content="NAME" Width="150" HorizontalAlignment="Left" Margin="0"/>
-                    <Label Content="OFFSET" Width="70" HorizontalAlignment="Left" Margin="0"/>
-                    <Label Content="KEY" Width="70" HorizontalAlignment="Left" Margin="0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="25.788" VerticalAlignment="Top" Margin="0,0,-2,0">
+                    <Label Content="NAME" Width="190" HorizontalAlignment="Left" Margin="0"/>
+                    <Label Content="OFFSET" Width="100" HorizontalAlignment="Left" Margin="0"/>
+                    <Label Content="KEY" Width="100" HorizontalAlignment="Left" Margin="0"/>
                 </StackPanel>
                 <ListBox x:Name="listBenchOffsetsTarget" Height="118.327" ItemsSource="{Binding Path=ConfigFile.BenchmarkOffsets}" SelectedIndex="{Binding Path=SelectedTargetBenchmarkIndex, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                                <Label Content="{Binding Path=Name}" Width="150" HorizontalAlignment="Left" Margin="0"/>
-                                <Label Content="{Binding Path=Offset}" Width="70" HorizontalAlignment="Left" Margin="0"/>
+                                <Label Content="{Binding Path=Name}" Width="190" HorizontalAlignment="Left" Margin="0"/>
+                                <Label Content="{Binding Path=Offset}" Width="100" HorizontalAlignment="Left" Margin="0"/>
                                 <Label Content="{Binding Path=Key}" Width="100" HorizontalAlignment="Left" Margin="0"/>
                             </StackPanel>
                         </DataTemplate>
@@ -50,7 +53,7 @@
                 </ListBox>
             </StackPanel>
         </GroupBox>
-        <Button x:Name="btnLaunch" Content="Launch" HorizontalAlignment="Left" Margin="10,70.277,0,0" VerticalAlignment="Top" Width="723.648" Height="138.548" Click="btnLaunch_Click" Background="#FF2168FF" 
+        <Button x:Name="btnLaunch" Content="Launch" HorizontalAlignment="Left" Margin="10,70.277,0,0" VerticalAlignment="Top" Width="292.601" Height="274.09" Click="btnLaunch_Click" Background="#FF2168FF" 
                 BorderBrush="#FF0C00FF" Foreground="White" FontSize="40" FontWeight="Bold" FontStyle="Italic" IsEnabled="{Binding Path=IsReady}">
             <Button.Style>
                 <Style TargetType="{x:Type Button}">
@@ -73,11 +76,13 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button x:Name="btnReloadConfig" Content="Reload Config" HorizontalAlignment="Left" Margin="10,213.825,0,0" VerticalAlignment="Top" Width="96.06" Click="btnReloadConfig_Click" IsEnabled="{Binding Path=IsReady}"/>
-        <Button x:Name="btnResetBigfile" Content="Reset Bigfile" HorizontalAlignment="Left" Margin="643.107,213.825,0,0" VerticalAlignment="Top" Width="90.541" Click="btnResetBigfile_Click" IsEnabled="{Binding Path=IsReady}"/>
+        <Button x:Name="btnReloadConfig" Content="Reload Config" HorizontalAlignment="Left" Margin="10,394.367,0,0" VerticalAlignment="Top" Width="96.06" Click="btnReloadConfig_Click" IsEnabled="{Binding Path=IsReady}"/>
+        <Button x:Name="btnResetBigfile" Content="Reset Bigfile" HorizontalAlignment="Left" Margin="10,349.367,0,0" VerticalAlignment="Top" Width="292.601" Click="btnResetBigfile_Click" 
+                IsEnabled="{Binding Path=IsReady}" Height="40" Background="Red"/>
         <Button x:Name="btnAddPath" Content="Add game path..." HorizontalAlignment="Left" Margin="584.436,36.96,0,0" VerticalAlignment="Top" Width="149.212" Click="btnAddPath_Click" IsEnabled="{Binding Path=IsReady}"/>
-        <Button x:Name="btnTest" Content="Save Config" HorizontalAlignment="Left" Margin="111.06,213.825,0,0" VerticalAlignment="Top" Width="75" Click="btnTest_Click" IsEnabled="{Binding Path=IsReady}"/>
-        <CheckBox x:Name="chkDoModify" Content="Do Modify Bigfile" HorizontalAlignment="Left" Margin="419,36.96,0,0" VerticalAlignment="Top" Width="123.395"
-                  IsChecked="{Binding Path=DoModify, Mode=TwoWay}"/>
+        <Button x:Name="btnTest" Content="Save Config" HorizontalAlignment="Left" Margin="111.06,394.367,0,0" VerticalAlignment="Top" Width="75" Click="btnTest_Click" IsEnabled="{Binding Path=IsReady}"/>
+        <CheckBox x:Name="chkDoModify" Content="Do Modify Bigfile" HorizontalAlignment="Left" Margin="10,36.96,0,0" VerticalAlignment="Top" Width="170.601"
+                  IsChecked="{Binding Path=DoModify, Mode=TwoWay}" Height="23.108" Background="#FF00FFF3" FontSize="18" BorderThickness="5" FlowDirection="RightToLeft">
+        </CheckBox>
     </Grid>
 </Window>

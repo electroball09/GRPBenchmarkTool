@@ -19,10 +19,29 @@ namespace GRP_Benchmark_Tool
         public List<string> CustomOffsets { get { return customOffsets; } }
         List<BenchmarkOffset> benchmarkOffsets = new List<BenchmarkOffset>();
         public List<BenchmarkOffset> BenchmarkOffsets { get { return benchmarkOffsets; } }
+        private BenchmarkOffset lockedTargetOffset;
+        public BenchmarkOffset LockedTargetOffset { get { return lockedTargetOffset; } }
         string customArguments = "";
         public string CustomArguments { get { return customArguments; } }
         string executableName = "";
         public string ExecutableName { get { return executableName; } }
+        string isUnlocked = "";
+        public bool IsUnlocked { get { return isUnlocked == "true"; } }
+        
+        public Visibility TargetBoxVisibility
+        {
+            get { return IsUnlocked ? Visibility.Visible : Visibility.Collapsed; }
+        }
+
+        public double SourceBoxHeight
+        {
+            get { return IsUnlocked ? 170 : 360; }
+        }
+
+        public double SourceListHeight
+        {
+            get { return IsUnlocked ? 120 : 310; }
+        }
 
         public void LoadFile()
         {
@@ -58,14 +77,20 @@ namespace GRP_Benchmark_Tool
                         benchmarkOffsets.Add(new BenchmarkOffset(benchOffsetSplit[0], benchOffsetSplit[1], benchOffsetSplit[2]));
                     }
                     if (split[0] == "args")
-                    {
                         customArguments = split[1];
-                    }
+                    if (split[0] == "isUnlocked")
+                        isUnlocked = split[1];
                 }
                 catch(Exception ex)
                 {
                     Error.ErrorBox(ex, "Error loading config file!", true);
                 }
+            }
+
+            if (!IsUnlocked)
+            {
+                lockedTargetOffset = benchmarkOffsets[0];
+                benchmarkOffsets.RemoveAt(0);
             }
         }
 
@@ -82,6 +107,8 @@ namespace GRP_Benchmark_Tool
                     lines.Add(string.Format("benchmarkOffset{4}{0}{3}{1}{3}{2}", benchOffset.Name, benchOffset.Offset, benchOffset.Key, OFFSET_SEPARATOR, SEPARATOR));
                 lines.Add("args" + SEPARATOR + customArguments);
                 lines.Add("executable" + SEPARATOR + executableName);
+                if (IsUnlocked)
+                    lines.Add("isUnlocked" + SEPARATOR + "true");
                 string[] linesArray = lines.ToArray();
                 FileInfo info = new FileInfo(FILE_NAME);
                 File.WriteAllLines(info.FullName, linesArray);
