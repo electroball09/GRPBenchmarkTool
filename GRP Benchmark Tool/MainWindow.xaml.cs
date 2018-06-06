@@ -141,6 +141,10 @@ namespace GRP_Benchmark_Tool
             {
                 BigfileModifier.ReplaceBenchmark(CurrentPath, benchOffset, benchOffset);
             }
+            if (!CurrConfigFile.IsUnlocked)
+            {
+                BigfileModifier.ReplaceBenchmark(CurrentPath, CurrConfigFile.LockedTargetOffset, CurrConfigFile.LockedTargetOffset);
+            }
             TriggerWorker();
         }
 
@@ -160,8 +164,15 @@ namespace GRP_Benchmark_Tool
             }
             if (didModify)
             {
-                Process.Start(CurrentPath + "\\" + CurrConfigFile.ExecutableName, CurrConfigFile.CustomArguments);
-                TriggerWorker();
+                try
+                {
+                    Process.Start(CurrentPath + "\\" + CurrConfigFile.ExecutableName, CurrConfigFile.CustomArguments);
+                    TriggerWorker();
+                }
+                catch (Exception ex)
+                {
+                    Error.ErrorBox(ex);
+                }
             }
         }
 
